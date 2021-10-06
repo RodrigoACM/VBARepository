@@ -1,0 +1,46 @@
+Public Function PriMaiusculo(Nome)
+
+   Nome = StrConv(Nome, 3)
+
+   Nome = Replace(Nome, " A ", " a ")
+   Nome = Replace(Nome, " E ", " e ")
+   Nome = Replace(Nome, " I ", " i ")
+   Nome = Replace(Nome, " O ", " o ")
+   Nome = Replace(Nome, " U ", " u ")
+   
+   Nome = Replace(Nome, " Á ", " á ")
+   Nome = Replace(Nome, " É ", " é ")
+   Nome = Replace(Nome, " Í ", " í ")
+   Nome = Replace(Nome, " Ó ", " ó ")
+   Nome = Replace(Nome, " Ú ", " ú ")
+   
+   Nome = Replace(Nome, " Das ", " das ")
+   Nome = Replace(Nome, " Dos ", " dos ")
+   Nome = Replace(Nome, " Da ", " da ")
+   Nome = Replace(Nome, " Do ", " do ")
+   Nome = Replace(Nome, " De ", " de ")
+   
+   PriMaiusculo = Nome
+
+End Function
+
+Public Function TiraAcento(Palavra)
+    CAcento = "àáâãäèéêëìíîïòóôõöùúûüÀÁÂÃÄÈÉÊËÌÍÎÒÓÔÕÖÙÚÛÜçÇñÑ"
+    SAcento = "aaaaaeeeeiiiiooooouuuuAAAAAEEEEIIIOOOOOUUUUcCnN"
+    Texto = ""
+    If Palavra <> "" Then
+        For X = 1 To Len(Palavra)
+        Letra = Mid(Palavra, X, 1)
+        Pos_Acento = InStr(CAcento, Letra)
+            If Pos_Acento > 0 Then
+                Letra = Mid(SAcento, Pos_Acento, 1)
+            End If
+        Texto = Texto & Letra
+        Next
+    TiraAcento = Texto
+    End If
+ End Function
+
+Sub AbreVBA()
+   Application.Goto "PriMaiusculo"
+End Sub
