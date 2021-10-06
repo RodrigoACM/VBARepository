@@ -1,0 +1,96 @@
+Sub Envio_Email()
+    
+    '****** Declaração de Variáveis ******
+    Dim OutApp As Object
+    Dim OutMail As Object
+    Dim WinHttpReq As Object
+  
+    '****** Captura username para identificar a pasta Desktop ******
+    GetUserName = Environ$("username")
+    URL_Image = "https://marcas-logos.net/wp-content/uploads/2019/11/Microsoft-Logo-1-600x375.png"
+    
+    '****** Cria um Arquivo HTML Externo ao Código ******
+    Call CriaHTMLTemporario(GetUserName)
+    
+    '****** Set do Objeto Outlook + Stream ADO para baixar o LOGO ******
+    Set OutApp = CreateObject("Outlook.Application")
+    Set OutMail = OutApp.CreateItem(olMailItem)
+    Set WinHttpReq = CreateObject("Microsoft.XMLHTTP")
+        
+    WinHttpReq.Open "GET", URL_Image, False
+    WinHttpReq.Send
+
+    If WinHttpReq.Status = 200 Then
+        Set oStream = CreateObject("ADODB.Stream")
+        oStream.Open
+        oStream.Type = 1
+        oStream.Write WinHttpReq.responseBody
+        oStream.SaveToFile "C:\Users\" & GetUserName & "\Desktop\logo.png", 2
+        oStream.Close
+    End If
+    
+    '****** Lê o Arquivo HTML que Criamos ******
+    strHTML_File = "C:\Users\" & GetUserName & "\Desktop\Sample.HTML"
+    Open strHTML_File For Input As #1
+    strHTML = Input(LOF(1), 1)
+    Close #1
+    
+    '****** Cria o Email propriamente dito com as Variáveis: importante a imagem só é lida se: ******
+    '****** Estiver Anexa + com a tag "CID:" no image src ******
+    
+    With OutMail
+        .SentOnBehalfOfName = "Linkedin"
+        .To = "destinatario@gmail.com"
+        .CC = "copiado@gmail.com"
+        .BCC = "somentesenecessario@gmail.com"
+        .Attachments.Add "C:\Users\" & GetUserName & "\Desktop\logo.png"
+        .HTMLBody = strHTML
+        .Subject = "[Bagagem de Mão] - Snippet #01 de 40 - " & Format(Date, "dd/mmm/yyyy")
+        .Display
+    End With
+
+    Set OutApp = Nothing
+    Set OutMail = Nothing
+
+End Sub
+
+Private Sub CriaHTMLTemporario(GetUserName)
+
+  DeleteFile ("C:\Users\" & GetUserName & "\Desktop\Sample.HTML")
+   
+  strFile_Path = "C:\Users\" & GetUserName & "\Desktop\Sample.HTML"
+  Open strFile_Path For Append As #1
+    
+    Print #1, "<html>"
+    Print #1, "<body>"
+    Print #1, "  <table cellpadding='0' cellspacing='0' style='align:center;font:Calibri; size:10px;background-color:#E6F0FA;color:#737373;font-weight:bold;text-align:center;'>"
+    Print #1, "     <tr><td>Abaixo temos o logo da Microsoft</td></tr>"
+    Print #1, "     <tr><td><img src='cid:logo.png'/></td></tr>"
+    Print #1, "     <tr><td>E continua a tabela...</td></tr>"
+    Print #1, "  </table>"
+    Print #1, "</body>"
+    Print #1, "</html>"
+      
+    Close #1
+
+End Sub
+
+Private Sub DeleteFile(ByVal FileToDelete As String)
+   If FileExists(FileToDelete) Then
+      SetAttr FileToDelete, vbNormal
+      Kill FileToDelete
+   End If
+End Sub
+
+Private Function FileExists(ByVal FileToTest As String) As Boolean
+   FileExists = (Dir(FileToTest) <> "")
+End Function
+
+Sub Chama()
+   Call Envio_Email
+End Sub
+
+Sub AbreVBA()
+   Application.Goto "Envio_Email"
+End Sub
+
