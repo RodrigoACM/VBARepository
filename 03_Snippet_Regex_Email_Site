@@ -1,0 +1,54 @@
+
+Public Function ExtractText(ByVal sInput As Variant, Tipo As String) As Variant
+    On Error GoTo Error_Handler
+    Dim oRegEx                As Object
+    Dim oMatches              As Object
+    Dim oMatch                As Object
+    Dim sEmail                As String
+ 
+    If Not IsNull(sInput) Then
+        Set oRegEx = CreateObject("vbscript.regexp")
+        With oRegEx
+                If Tipo = "email" Then
+                .Pattern = "([a-zA-ZF0-9\u00C0-\u017F._-]+@[a-zA-Z0-9\u00C0-\u017F._-]+\.[a-zA-Z0-9\u00C0-\u017F_-]+)"
+                Else
+                 .Pattern = "https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
+                End If
+            .Global = True
+            .IgnoreCase = True
+            .MultiLine = True
+            Set oMatches = .Execute(sInput)
+        End With
+        For Each oMatch In oMatches
+            sText = oMatch.Value & "," & sText
+        Next oMatch
+        If Right(sText, 1) = "," Then sText = Left(sText, Len(sText) - 1)
+ 
+        ExtractText = Split(sText, ",")
+    Else
+        ExtractText = Null
+    End If
+ 
+Error_Handler_Exit:
+    On Error Resume Next
+    If Not oMatch Is Nothing Then Set oMatch = Nothing
+    If Not oMatches Is Nothing Then Set oMatches = Nothing
+    If Not oRegEx Is Nothing Then Set oRegEx = Nothing
+    Exit Function
+ 
+Error_Handler:
+    MsgBox "The following error has occured" & vbCrLf & vbCrLf & _
+           "Error Number: " & Err.Number & vbCrLf & _
+           "Error Source: ExtractText" & vbCrLf & _
+           "Error Description: " & Err.Description & _
+           Switch(Erl = 0, "", Erl <> 0, vbCrLf & "Line No: " & Erl) _
+           , vbOKOnly + vbCritical, "An Error has Occured!"
+    Resume Error_Handler_Exit
+End Function
+
+
+
+Sub AbreVBA()
+   Application.Goto "ExtractText"
+End Sub
+
