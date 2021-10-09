@@ -34,5 +34,5 @@ End Sub
 
 
 Sub AbreVBA()
-   Application.Goto "Ocorrencias_Palavras"
+   Application.Goto "Ocorrencias_Termos"
 End Sub
