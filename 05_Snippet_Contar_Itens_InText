@@ -1,0 +1,38 @@
+
+Public Function Ocorrencias_Termos(Texto As String, Termo As String, rng As Range)
+
+   nTexto = lcase(Texto)
+   nTermo = lcase(Termo)
+   
+   If Len(Texto) < 1 Or Len(Termo) < 1 Then
+      Ocorrencias_Termos = "Fórmula Incompleta(Texto ou Termo)"
+      Exit Function
+   End If
+   
+   TamanhoAntes = Len(Texto)
+   TamanhoTermo = Len(Termo)
+   
+   Eureka = (TamanhoAntes - Len(Replace(nTexto, nTermo, ""))) / TamanhoTermo
+      
+   Ocorrencias_Termos = Eureka
+   
+   Call DestacarOcorrencias(nTermo, rng)
+
+End Function
+
+Sub DestacarOcorrencias(nTermo, rng)
+    
+    rng.Font.Color = vbBlack
+    
+    For i = 1 To Len(rng.Value)
+        If Mid(rng.Value, i, Len(nTermo)) = nTermo Then
+           rng.Characters(i, Len(nTermo)).Font.Color = vbRed
+        End If
+    Next
+
+End Sub
+
+
+Sub AbreVBA()
+   Application.Goto "Ocorrencias_Palavras"
+End Sub
