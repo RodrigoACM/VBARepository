@@ -1,0 +1,156 @@
+Sub AbreVBA()
+   Application.Goto "ValidaCPF"
+End Sub
+
+Public Function ValidaCPF(ByVal lNumCPF As String) As String
+    Application.Volatile
+    
+    Dim lMultiplicador  As Integer
+    Dim lDv1            As Integer
+    Dim lDv2            As Integer
+    
+    lMultiplicador = 2
+    
+    If Len(lNumCPF) < 9 Or Len(lNumCPF) > 11 Then
+       ValidaCPF = "CPF Inválido"
+       Exit Function
+    End If
+    
+    'Realiza o preenchimento dos zeros á esquerda
+    lNumCPF = String(11 - Len(lNumCPF), "0") & lNumCPF
+    
+    'Realiza o cálculo do dividendo para o dv1 e o dv2
+    For I = 9 To 1 Step -1
+        lDv1 = (Mid(lNumCPF, I, 1) * lMultiplicador) + lDv1
+        
+        lDv2 = (Mid(lNumCPF, I, 1) * (lMultiplicador + 1)) + lDv2
+        
+        lMultiplicador = lMultiplicador + 1
+    Next
+    
+    'Realiza o cálculo para chegar no primeiro dígio
+    lDv1 = lDv1 Mod 11
+    
+    If lDv1 >= 2 Then
+        lDv1 = 11 - lDv1
+    Else
+        lDv1 = 0
+    End If
+    
+    'Realiza o cálculo para chegar no segundo dígido
+    lDv2 = lDv2 + (lDv1 * 2)
+    
+    lDv2 = lDv2 Mod 11
+    
+    If lDv2 >= 2 Then
+        lDv2 = 11 - lDv2
+    Else
+        lDv2 = 0
+    End If
+    
+    
+    Select Case lNumCPF
+           Case Is = "11111111111"
+                ValidaCPF = "CPF Inválido"
+           Case Is = "22222222222"
+                ValidaCPF = "CPF Inválido"
+           Case Is = "33333333333"
+                ValidaCPF = "CPF Inválido"
+           Case Is = "44444444444"
+                ValidaCPF = "CPF Inválido"
+           Case Is = "55555555555"
+                ValidaCPF = "CPF Inválido"
+           Case Is = "66666666666"
+                ValidaCPF = "CPF Inválido"
+           Case Is = "77777777777"
+                ValidaCPF = "CPF Inválido"
+           Case Is = "88888888888"
+                ValidaCPF = "CPF Inválido"
+           Case Is = "99999999999"
+                ValidaCPF = "CPF Inválido"
+           Case Else
+    
+    'Realiza a validação e retorna na função
+    If Right(lNumCPF, 2) = CStr(lDv1) & CStr(lDv2) Then
+        ValidaCPF = "CPF Válido"
+    Else
+        ValidaCPF = "CPF Inválido"
+    End If
+    
+    End Select
+    
+End Function
+
+
+Public Function DV_CorretoCPF(ByVal lNumCPF As String) As String
+    Application.Volatile
+    
+    Dim lMultiplicador  As Integer
+    Dim lDv1            As Integer
+    Dim lDv2            As Integer
+    
+    lMultiplicador = 2
+    
+    If Len(lNumCPF) < 9 Or Len(lNumCPF) > 11 Then
+       DV_CorretoCPF = "CPF Inválido"
+       Exit Function
+    End If
+    
+    'Realiza o preenchimento dos zeros á esquerda
+    lNumCPF = String(11 - Len(lNumCPF), "0") & lNumCPF
+    
+    'Realiza o cálculo do dividendo para o dv1 e o dv2
+    For I = 9 To 1 Step -1
+        lDv1 = (Mid(lNumCPF, I, 1) * lMultiplicador) + lDv1
+        
+        lDv2 = (Mid(lNumCPF, I, 1) * (lMultiplicador + 1)) + lDv2
+        
+        lMultiplicador = lMultiplicador + 1
+    Next
+    
+    'Realiza o cálculo para chegar no primeiro dígio
+    lDv1 = lDv1 Mod 11
+    
+    If lDv1 >= 2 Then
+        lDv1 = 11 - lDv1
+    Else
+        lDv1 = 0
+    End If
+    
+    'Realiza o cálculo para chegar no segundo dígido
+    lDv2 = lDv2 + (lDv1 * 2)
+    
+    lDv2 = lDv2 Mod 11
+    
+    If lDv2 >= 2 Then
+        lDv2 = 11 - lDv2
+    Else
+        lDv2 = 0
+    End If
+    
+    
+    Select Case lNumCPF
+           Case Is = "11111111111"
+                DV_CorretoCPF = "CPF Inválido"
+           Case Is = "22222222222"
+                DV_CorretoCPF = "CPF Inválido"
+           Case Is = "33333333333"
+                DV_CorretoCPF = "CPF Inválido"
+           Case Is = "44444444444"
+                DV_CorretoCPF = "CPF Inválido"
+           Case Is = "55555555555"
+                DV_CorretoCPF = "CPF Inválido"
+           Case Is = "66666666666"
+                DV_CorretoCPF = "CPF Inválido"
+           Case Is = "77777777777"
+                DV_CorretoCPF = "CPF Inválido"
+           Case Is = "88888888888"
+                DV_CorretoCPF = "CPF Inválido"
+           Case Is = "99999999999"
+                DV_CorretoCPF = "CPF Inválido"
+           Case Else
+                DV_CorretoCPF = CStr(lDv1) & CStr(lDv2)
+    End Select
+
+End Function
+
