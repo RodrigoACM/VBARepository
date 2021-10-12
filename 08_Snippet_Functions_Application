@@ -1,0 +1,30 @@
+Sub FuncoesApplication()
+   
+   'Exemplo de como usar uma fórmula de Soma
+   MsgBox "Fórmula de Soma: 10+20+30=" & Application.WorksheetFunction.Sum(10, 20, 30)
+   
+   'Exemplo de como usar uma procv
+   
+   'Array 3x2
+   Dim Matriz(1 To 3, 1 To 2)
+   
+   Valor = 10
+   Matriz(1, 1) = 10
+   Matriz(2, 1) = 20
+   Matriz(3, 1) = 30
+   
+   Matriz(1, 2) = "Primeiro Termo"
+   Matriz(2, 2) = "Segundo Termo"
+   Matriz(3, 2) = "Terceiro Termo"
+   
+   'Aqui é um PROCV Normal, procura o Valor e retorna a segunda coluna na matriz quando acha correspondência na primeira
+   MsgBox "Resultado PROCV=" & Application.WorksheetFunction.VLookup(Valor, Matriz(), 2, 0)
+
+
+End Sub
+
+
+Sub AbreVBA()
+   Application.Goto "FuncoesApplication"
+End Sub
+
