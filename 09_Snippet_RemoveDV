@@ -1,0 +1,11 @@
+Public Function RetiraDV(vlr)
+   
+RetiraDV = Int(vlr / 100)
+
+End Function
+
+
+Sub AbreVBA()
+   Application.Goto "ExemploRetirarDV"
+End Sub
+
