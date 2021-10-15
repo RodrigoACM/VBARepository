@@ -1,0 +1,26 @@
+Public Function AchaAlias(URL, Barra)
+   
+EnderecoBarras = ""
+Barra = Barra - 1
+   
+For i = 1 To Len(URL)
+    If Mid(URL, i, 1) = "/" Then
+       EnderecoBarras = EnderecoBarras & i & "§"
+    End If
+Next
+
+If Len(EnderecoBarras) > 0 Then
+    EnderecoBarras = Left(EnderecoBarras, Len(EnderecoBarras) - 1)
+    VectBarras = Split(EnderecoBarras, "§")
+    AchaAlias = Mid(URL, VectBarras(Barra) + 1, VectBarras(Barra + 1) - VectBarras(Barra) - 1)
+    Else
+    AchaAlias = ""
+End If
+
+End Function
+
+
+Sub AbreVBA()
+   Application.Goto "AchaAlias"
+End Sub
+
