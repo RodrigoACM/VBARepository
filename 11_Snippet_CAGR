@@ -1,0 +1,20 @@
+
+Public Function CAGR(rng As Range) As Double
+
+Dim firstval As Double
+Dim lastval As Double
+
+firstval = rng.Cells(1, 1).Value
+lastval = rng.Cells(rng.Rows.Count, 1).Value
+
+CAGR = (lastval / firstval) ^ (1 / rng.Rows.Count) - 1
+
+
+
+End Function
+
+
+Sub AbreVBA()
+   Application.Goto "CAGR"
+End Sub
+
