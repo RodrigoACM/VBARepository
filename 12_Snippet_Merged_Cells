@@ -1,0 +1,17 @@
+
+Public Function RootMesclado(rng As Range)
+
+  If rng.MergeCells Then
+     RootMesclado = rng.MergeArea.Cells(1, 1).Value
+     Else
+     RootMesclado = rng.Value
+  End If
+  
+End Function
+
+   
+
+Sub AbreVBA()
+   Application.Goto "RootMesclado"
+End Sub
+
