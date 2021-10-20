@@ -1,0 +1,33 @@
+'Userform
+
+Private Sub cmb_Click()
+    
+    Max = 10000
+
+    For i = 1 To Max
+        PctDone = i / Max
+        Me.lbl_Barra.Width = PctDone * 216
+        Me.lbl_Status.Caption = Format(i, "#,##0") & " de " & _
+        Format(Max, "#,##0") & " Concluído | (" & Format(PctDone, "0.00%") & ")"
+        DoEvents
+     Next
+End Sub
+
+
+Private Sub UserForm_Activate()
+    Me.lbl_Barra.Width = 0
+End Sub
+
+'Módulo 1
+
+Sub Mostra()
+
+  form.Show
+
+End Sub
+
+
+Sub AbreVBA()
+   Application.Goto "Mostra"
+End Sub
+
