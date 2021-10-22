@@ -1,0 +1,100 @@
+'************ Declara o Array Globalmente ***********
+Dim GlobalArray As Variant
+ 
+Public Sub InitArray()
+'************ Inicia o Array, "vetor" no caso ******************
+   GlobalArray = Array("&quot;§Chr(34)", "&amp;§&", "&apos;§'", "&lt;§<", "&gt;§>", "&nbsp;§ ", "&iexcl;§¡", "&cent;§¢", "&pound;§£", "&curren;§¤", "&yen;§¥", "&brvbar;§¦", "&sect;§§", "&uml;§¨", "&copy;§©", "&ordf;§ª", "&laquo;§«", "&not;§¬", "&reg;§®", "&macr;§¯", "&deg;§°", "&plusmn;§±", "&sup2;§²", "&sup3;§³", "&acute;§´", "&micro;§µ", "&para;§¶", "&middot;§·", "&cedil;§¸", "&sup1;§¹", "&ordm;§º", "&raquo;§»", "&frac14;§¼", "&frac12;§½", "&frac34;§¾", "&iquest;§¿", "&Agrave;§À", "&Aacute;§Á", "&Acirc;§Â", "&Atilde;§Ã", "&Auml;§Ä", "&Aring;§Å", "&AElig;§Æ", "&Ccedil;§Ç", "&Egrave;§È", "&Eacute;§É", "&Ecirc;§Ê", "&Euml;§Ë", "&Igrave;§Ì", "&Iacute;§Í", "&Icirc;§Î", "&Iuml;§Ï", "&ETH;§Ð", "&Ntilde;§Ñ", "&Ograve;§Ò", "&Oacute;§Ó", "&Ocirc;§Ô", "&Otilde;§Õ", "&Ouml;§Ö", "&times;§×", "&Oslash;§Ø", "&Ugrave;§Ù", "&Uacute;§Ú", "&Ucirc;§Û", "&Uuml;§Ü", "&Yacute;§Ý", "&THORN;§Þ", "&szlig;§ß", "&agrave;§à", "&aacute;§á", "&acirc;§â", "&atilde;§ã", "&auml;§ä", "&aring;§å", "&aelig;§æ", _
+   "&ccedil;§ç", "&egrave;§è", "&eacute;§é", "&ecirc;§ê", "&euml;§ë", "&igrave;§ì", "&iacute;§í", "&icirc;§î", "&iuml;§ï", "&eth;§ð", "&ntilde;§ñ", "&ograve;§ò", "&oacute;§ó", "&ocirc;§ô", "&otilde;§õ", "&ouml;§ö", "&divide;§÷", "&oslash;§ø", "&ugrave;§ù", "&uacute;§ú", "&ucirc;§û", "&uuml;§ü", "&yacute;§ý", "&thorn;§þ", "&yuml;§ÿ", "&OElig;§Œ", "&oelig;§œ", "&Scaron;§Š", "&scaron;§š", "&Yuml;§Ÿ", "&fnof;§ƒ", "&circ;§ˆ", "&tilde;§˜", "&thinsp;§", "&zwnj;§", "&zwj;§", "&lrm;§", "&rlm;§", "&ndash;§–", "&mdash;§-", "&lsquo;§'", "&rsquo;§'", "&sbquo;§‚", "&ldquo;§Chr(34)", "&rdquo;§Chr(34)", "&bdquo;§„", "&dagger;§†", "&Dagger;§‡", "&bull;§•", "&hellip;§…", "&permil;§‰", "&lsaquo;§‹", "&rsaquo;§›", "&euro;§€", "&trade;§™")
+End Sub
+ 
+
+Public Function Convert_Html_Entities(rng As Range)
+    
+    Call InitArray
+    
+    Valor = rng.Value
+    
+    ' ************** Procura correspondências no Array **************
+    For i = LBound(GlobalArray) To UBound(GlobalArray)
+        toReplace = Split(GlobalArray(i), "§")
+        Valor = Replace(Valor, toReplace(0), toReplace(1))
+    Next
+    
+    Convert_Html_Entities = Valor
+End Function
+
+
+Public Function Verifica_Entities(rng As Range)
+  
+    Call InitArray
+    
+    ' ************** reseta a cor do texto **************
+    Valor = rng.Value
+    rng.Font.Color = vbBlack
+      
+    ' ************** conta quantos termos aparecem via Array **************
+    For i = LBound(GlobalArray) To UBound(GlobalArray)
+        toFind = Split(GlobalArray(i), "§")
+        entCount = entCount + Match_Termo(Valor, toFind(0))
+    Next
+    
+   ' ************** conta quantos termos aparecem via REGEX, uma forma mais elegante :) dispensa o uso de Array inputado na mão **************
+   Call FindEntities(rng)
+   Verifica_Entities = entCount
+
+End Function
+
+
+Public Function Match_Termo(ByVal Texto As String, ByVal Termo As String)
+
+   ' ************** acha a quantidade de vezes que um termo aparece **************
+   TamanhoAntes = Len(Texto)
+   TamanhoTermo = Len(Termo)
+   
+   Match_Termo = (TamanhoAntes - Len(Replace(Texto, Termo, ""))) / TamanhoTermo
+
+End Function
+
+    
+Sub DestacarOcorrencias(nTermo, rng)
+
+    ' ************** destaca sequência **************
+    For i = 1 To Len(rng.Value)
+        If Mid(rng.Value, i, Len(nTermo)) = nTermo Then
+           rng.Characters(i, Len(nTermo)).Font.Color = vbRed
+        End If
+    Next
+
+End Sub
+
+Public Sub FindEntities(rng As Range)
+
+    Dim oRegEx                As Object
+    Dim oMatches              As Object
+    Dim oMatch                As Object
+
+    ' ************** Inicia REGEX, define padrão e manda matchs para destacar **************
+    sInput = rng.Value
+    If Not IsNull(sInput) Then
+        Set oRegEx = CreateObject("vbscript.regexp")
+        With oRegEx
+            .Pattern = "&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-fA-F]{1,6});"
+            .Global = True
+            .IgnoreCase = True
+            .MultiLine = True
+            Set oMatches = .Execute(sInput)
+        End With
+        
+        For Each oMatch In oMatches
+            sText = oMatch.Value
+            Call DestacarOcorrencias(sText, rng)
+        Next oMatch
+     End If
+End Sub
+
+
+Sub AbreVBA()
+   Application.Goto "ConvertHTMLEntities"
+End Sub
+
+
