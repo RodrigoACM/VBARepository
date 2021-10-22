@@ -94,7 +94,7 @@ End Sub
 
 
 Sub AbreVBA()
-   Application.Goto "ConvertHTMLEntities"
+   Application.Goto "Convert_Html_Entities"
 End Sub
 
 
