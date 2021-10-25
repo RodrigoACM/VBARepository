@@ -1,0 +1,20 @@
+Function GetUserFullName() As String
+    Dim WSHnet, UserName, UserDomain, objUser
+    Set WSHnet = CreateObject("WScript.Network")
+    UserName = WSHnet.UserName
+    UserDomain = WSHnet.UserDomain
+    Set objUser = GetObject("WinNT://" & UserDomain & "/" & UserName & ",user")
+    GetUserFullName = objUser.FullName
+End Function
+
+
+Function GetUserName() As String
+    GetUserName = VBA.Environ("Username")
+End Function
+
+
+Sub AbreVBA()
+   Application.Goto "GetUserFullName"
+End Sub
+
+
