@@ -1,0 +1,11 @@
+Public Function GetLastRow(rng As Range)
+    GetLastRow = Cells(1048576, rng.Column).End(xlUp).Row
+End Function
+
+Public Function GetLastColumn(rng As Range)
+    GetLastColumn = Cells(rng.Row, 16384).End(xlToLeft).Column
+End Function
+
+Sub AbreVBA()
+   Application.Goto "GetLastRow"
+End Sub
