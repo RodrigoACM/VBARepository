@@ -1,0 +1,44 @@
+Public Sub GetByTagName()
+
+Element = lcase(Range("C9").Value)
+URL = Range("B9").Value
+
+Dim IE As Object
+Dim doc As Object
+Dim Verify As Object
+
+Set IE = CreateObject("InternetExplorer.Application")
+IE.Visible = False
+IE.Navigate URL
+
+'wait for page to load
+Do Until IE.ReadyState = 4: DoEvents: Loop
+
+Set doc = IE.Document
+Set Verify = doc.GetElementsByTagName(Element)
+
+For Each x In Verify
+    nElement = nElement + 1
+Next x
+
+IE.Quit
+
+Range("D9").Value = nElement
+
+
+Exit_Sub:
+       Exit Sub
+
+ErrorHandler:
+        MsgBox Err.Description, vbCritical, "Error " & Err.Number
+        Resume Exit_Sub ' breakpoint here if you want examine the code after error, otherwhise it terminates the function
+        Resume ' Once  the code breaks on the above line, move to this instruction and F8 to return to the statement in error
+
+End Sub
+
+
+Sub AbreVBA()
+   Application.Goto "GetByTagName"
+End Sub
+
+
