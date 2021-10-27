@@ -1,0 +1,48 @@
+Public Function VerificaNaoEspacos(texto)
+       Appointments = 0
+
+    For X = 1 To Len(texto)
+        Letter = Mid(texto, X, 1)
+
+        Select Case Letter
+
+           'Real NULL
+           Case Is = ""
+           Case Is = vbNullChar  'Chr(0)  Character having a value of 0.
+           Case Is = vbNullString    'String having value 0   Not the same as a zero-length string (""); used for calling external procedures. Cannot be passed to any DLL's
+
+           'Real SPACE
+           Case Is = " "
+
+           'Other things
+           Case Is = vbCr    'Chr(13) Carriage return character
+             Appointments = Appointments + 1
+           Case Is = vbLf    'Chr(10) Linefeed character
+             Appointments = Appointments + 1
+           Case Is = vbCrLf  'Chr(13) + Chr(10)   Carriage return - linefeed combination
+             Appointments = Appointments + 1
+           Case Is = vbNewLine   'Chr(13) + Chr(10)   New line character
+             Appointments = Appointments + 1
+           Case Is = vbTab   'Chr(9)  Tab character
+             Appointments = Appointments + 1
+           Case Is = vbBack  'Chr(8)  Backspace character
+             Appointments = Appointments + 1
+           Case Is = vbFormFeed  'Chr(12) Word VBA Manual - manual page break ?
+             Appointments = Appointments + 1
+           Case Is = vbVerticalTab   'Chr(11) Word VBA Manual - manual line break (Shift + Enter)
+             Appointments = Appointments + 1
+
+           Case Else
+
+           Appointments = Appointments + 1
+
+        End Select
+     Next
+
+     VerificaNaoEspacos = Appointments
+End Function
+
+
+Sub AbreVBA()
+   Application.Goto "VerificaNaoEspacos"
+End Sub
