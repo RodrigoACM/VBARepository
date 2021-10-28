@@ -1,0 +1,74 @@
+Private Function Selecting_Files()
+ Dim f As Object
+
+ Set f = Application.FileDialog(3)
+     f.AllowMultiSelect = False
+     f.Show
+
+     SelectedFiles = f.SelectedItems.Count
+
+     If SelectedFiles < 1 Then
+       MsgBox "None file Selected", vbOKOnly, "Error"
+       Exit Function
+     End If
+     
+     File_Fullname = f.SelectedItems(1)
+     
+     Set fs = CreateObject("Scripting.FileSystemObject")
+     Set fso = fs.GetFile(File_Fullname)
+
+     File_Fullname = f.SelectedItems(1)
+     File_Folder = Left(File_Fullname, InStrRev(File_Fullname, "\"))
+     File_Name = Mid(File_Fullname, InStrRev(File_Fullname, "\") + 1, Len(File_Fullname) - InStrRev(File_Fullname, "\"))
+     File_Size = fso.Size
+     File_Created = fso.DateCreated
+     File_LastModified = fso.DateLastModified
+     File_LastAccessed = fso.DateLastAccessed
+     File_Type = fso.Type
+     
+
+     Selecting_Files = File_Fullname & "§" & File_Folder & "§" & File_Name & "§" & File_Size & "§" & File_Created & "§" & File_LastModified & "§" & File_LastAccessed & "§" & File_Type
+
+End Function
+
+Sub CallFunction()
+
+   FileDetails = Selecting_Files()
+
+   SplitFileDetails = Split(FileDetails, "§")
+
+   File_Fullname = SplitFileDetails(0)
+   File_Folder = SplitFileDetails(1)
+   File_Name = SplitFileDetails(2)
+   File_Size = Format(SplitFileDetails(3) / 1000, "#,##0,0") & " kb"
+   File_Created = SplitFileDetails(4)
+   File_LastModified = SplitFileDetails(5)
+   File_LastAccessed = SplitFileDetails(6)
+   File_Type = SplitFileDetails(7)
+
+   MsgBox File_Fullname, vbInformation, "Caminho Completo do Arquivo"
+   MsgBox File_Folder, vbInformation, "Pasta do Arquivo"
+   MsgBox File_Name, vbInformation, "Nome do Arquivo"
+   MsgBox File_Size, vbInformation, "Tamanho do Arquivo"
+   MsgBox File_Created & vbCrLf & "Criado a: " & DiferencaTempo(File_Created), vbInformation, "Data de Criação"
+   MsgBox File_LastModified & vbCrLf & "Modificado a: " & DiferencaTempo(File_LastModified), vbInformation, "Última Modificação"
+   MsgBox File_LastAccessed & vbCrLf & "Acessado a: " & DiferencaTempo(File_LastAccessed), vbInformation, "Último Acesso"
+   MsgBox File_Type, vbInformation, "Tipo do Arquivo"
+
+End Sub
+
+Sub AbreVBA()
+   Application.Goto "CallFunction"
+End Sub
+
+Public Function DiferencaTempo(Tempo)
+
+diff = Now - CDate(Tempo)
+Texto = Format(CLng(Int(diff)), "#,##0") & " dias" & vbCrLf
+Texto = Texto & Hour(diff) & " horas" & vbCrLf
+Texto = Texto & Minute(diff) & " minutos" & vbCrLf
+Texto = Texto & Second(diff) & " segundos"
+
+DiferencaTempo = Texto
+
+End Function
