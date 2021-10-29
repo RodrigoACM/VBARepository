@@ -1,0 +1,43 @@
+Public Sub ExportVisualBasicCode()
+    Const Module = 1
+    Const ClassModule = 2
+    Const Form = 3
+    Const Document = 100
+    Const Padding = 24
+    Dim VBComponent As Object
+    Dim path As String
+    Dim directory As String
+    Dim extension As String
+    Dim fso As New FileSystemObject
+    directory = ActiveWorkbook.path & "\VC_" & fso.GetBaseName(ActiveWorkbook.Name)
+    If Not fso.FolderExists(directory) Then
+        Call fso.CreateFolder(directory)
+    End If
+    Set fso = Nothing
+    For Each VBComponent In ActiveWorkbook.VBProject.VBComponents
+        Select Case VBComponent.Type
+            Case ClassModule, Document
+                extension = ".cls"
+            Case Form
+                extension = ".frm"
+            Case Module
+                extension = ".bas"
+            Case Else
+                extension = ".txt"
+        End Select
+
+        On Error Resume Next
+        Err.Clear
+
+        path = directory & "\" & VBComponent.Name & extension
+        Call VBComponent.Export(path)
+
+        If Err.Number <> 0 Then
+            Call MsgBox("Failed to export " & VBComponent.Name & " to " & path, vbCritical)
+        Else
+            Debug.Print "Exported " & Left$(VBComponent.Name & ":" & Space(Padding), Padding) & path
+        End If
+
+        On Error GoTo 0
+    Next
+End Sub
