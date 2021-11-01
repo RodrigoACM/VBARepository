@@ -1,28 +1,33 @@
 data data_lucro;
- input lucro  mes $10.;
+ infile datalines delimiter=','; 
+ length mes $9 ;
+ input lucro  mes $ semestre $ ;
  datalines;
- 10000 janeiro
- 30000 fevereiro
- 35000 março
- 15000 abril
- 30000 maio
- 15500 junho
- 8500  julho 
- 45000 agosto
- 38000 setembro
- 15000 outubro 
- 25000 novembro
- 55000 dezembro
+	 10000,janeiro,1S21 
+	 30000,fevereiro,1S21
+	 35000,março,1S21
+	 15000,abril,1S21
+	 30000,maio,1S21
+	 15500,junho,1S21
+	 8500,julho,2S21
+	 45000,agosto,2S21
+	 38000,setembro,2S21
+	 15000,outubro,2S21
+	 25000,novembro,2S21
+	 55000,dezembro,2S21
  ;run;
  
-data lucro_acumulado;
- set data_lucro;
- lucro_acumulado = sum(lucro,lucro_acumulado);
-run;
-
 data lucro_acumulado_retain;
- set data_lucro;
- retain lucro_acumulado;
- lucro_acumulado = sum(lucro,lucro_acumulado);
- format lucro lucro_acumulado comma12.0;
+	 set data_lucro;
+	 retain lucro_acumulado
+	 retain lucro_acu_semestre;
+	 by semestre;
+	 
+     if first.semestre then do; /*Cada vez que muda o semestre lucro = 0*/
+        lucro_acu_semestre=0;
+     end;	 
+	 
+	 lucro_acumulado = sum(lucro,lucro_acumulado);
+	 lucro_acu_semestre = sum(lucro,lucro_acu_semestre);
+	 format lucro lucro_acumulado lucro_acu_semestre comma12.0;
 run;  
