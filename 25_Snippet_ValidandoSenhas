@@ -1,0 +1,75 @@
+Private Sub cmb_Validar_Click()
+  passCheck = fValPass(TextBox1.Text)
+  If passCheck Then
+     MsgBox "Senha Válida"
+     Else
+     MsgBox "Senha não cumpre os requisitos de Segurança"
+  End If
+End Sub
+
+Public Sub TextBox1_Change()
+
+Dim CharSpecial, CharNumber, CharCapital As Integer
+CharSpecial = 0
+CharNumber = 0
+CharCapital = 0
+
+  If Len(TextBox1.Text) > 1 Then
+     For I = 1 To Len(TextBox1.Text)
+         Select Case Asc(Mid(TextBox1.Text, I, 1))
+                Case 33 To 42 'Caracteres Especiais
+                     CharSpecial = CharSpecial + 1
+                Case 48 To 57 'Números
+                     CharNumber = CharNumber + 1
+                Case 65 To 90 'Letras Maiúsculas
+                     CharCapital = CharCapital + 1
+          End Select
+     Next
+  
+     If Len(TextBox1.Text) < 8 Then
+        lbl_status.Caption = "menos de 8 caracteres"
+        lbl_status.ForeColor = RGB(255, 0, 0)
+        Else
+        lbl_status.Caption = ""
+        lbl_status.ForeColor = RGB(0, 0, 0)
+     End If
+  
+     Soma = CharSpecial + CharNumber + CharCapital
+     
+     Select Case Soma
+        Case 0 To 1
+             lbl_Check.Caption = "Fraca"
+             lbl_Check.ForeColor = RGB(142, 150, 160)
+             lbl_Check.BackColor = RGB(240, 240, 240)
+        Case 2
+             lbl_Check.Caption = "Média"
+             lbl_Check.ForeColor = RGB(255, 255, 255)
+             lbl_Check.BackColor = RGB(255, 192, 0)
+        Case 3
+             lbl_Check.Caption = "Forte"
+             lbl_Check.ForeColor = RGB(255, 255, 255)
+             lbl_Check.BackColor = RGB(146, 208, 80)
+        Case Else
+             lbl_Check.Caption = "Muito Forte"
+             lbl_Check.ForeColor = RGB(255, 255, 255)
+             lbl_Check.BackColor = RGB(0, 176, 80)
+        End Select
+        Else
+             lbl_Check.Caption = "Fraca"
+             lbl_Check.ForeColor = RGB(142, 150, 160)
+             lbl_Check.BackColor = RGB(240, 240, 240)
+   End If
+End Sub
+
+Public Function fValPass(ByVal strPass As String) As Boolean
+Dim result As String
+Dim RE As Object
+'   Define o Objeto de expressão regular
+Set RE = CreateObject("VBScript.RegExp")
+With RE
+    .Pattern = "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\d\W])|(?=.*\W)(?=.*\d))|(?=.*\W)(?=.*[A-Z])(?=.*\d)).{8,15}$"
+    'Não ignora Case Sensitive
+    .IgnoreCase = False
+    fValPass = .Test(strPass) 'retorno TRUE ou FALSE
+End With
+End Function
