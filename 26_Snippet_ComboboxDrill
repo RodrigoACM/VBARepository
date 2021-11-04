@@ -1,0 +1,14 @@
+Option Compare Database
+
+Private Sub cmb1_Change()
+    
+    strSQL = "SELECT tbl_paises.id_Pais, tbl_paises.Pais FROM tbl_paises "
+    strSQL = strSQL & " WHERE Continente =" & cmb1.Value & ";"
+    
+    Me.cmb2.RowSource = strSQL
+    
+End Sub
+
+Private Sub Form_Load()
+    Me.cmb2.RowSource = "SELECT tbl_paises.id_Pais, tbl_paises.Pais FROM tbl_paises "
+End Sub
