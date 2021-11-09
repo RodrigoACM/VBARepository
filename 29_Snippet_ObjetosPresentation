@@ -1,0 +1,59 @@
+Sub Atualiza()
+
+Dim PPT As PowerPoint.Application
+Dim pres As PowerPoint.Presentation
+Dim txt1 As PowerPoint.Shape
+Dim txt2 As PowerPoint.Shape
+Dim txt3 As PowerPoint.Shape
+
+Set PPT = CreateObject("PowerPoint.Application")
+PPT.Visible = True
+
+With PPT.Presentations.Add
+     .Slides.Add Index:=1, Layout:=ppLayoutBlank
+End With
+
+Set txt1 = PPT.ActivePresentation.Slides(1).Shapes.AddShape(Type:=msoShapeRectangle, _
+    Left:=50, Top:=50, Width:=600, Height:=35)
+    
+Set txt2 = PPT.ActivePresentation.Slides(1).Shapes.AddShape(Type:=msoShapeRectangle, _
+    Left:=50, Top:=150, Width:=600, Height:=35)
+    
+Set txt3 = PPT.ActivePresentation.Slides(1).Shapes.AddShape(Type:=msoShapeRectangle, _
+    Left:=50, Top:=250, Width:=600, Height:=35)
+        
+txt1.Name = Range("C9").Value
+txt2.Name = Range("C10").Value
+txt3.Name = Range("C11").Value
+
+txt1.TextFrame.TextRange.Characters.Text = Range("B9").Value
+txt2.TextFrame.TextRange.Characters.Text = Range("B10").Value
+txt3.TextFrame.TextRange.Characters.Text = Range("B11").Value
+
+Call FormataShape(txt1)
+Call FormataShape(txt2)
+Call FormataShape(txt3)
+
+Set PPT = Nothing
+Set pres = Nothing
+Set txt1 = Nothing
+Set txt2 = Nothing
+Set txt3 = Nothing
+
+End Sub
+
+Public Sub FormataShape(obj As Object)
+ 
+obj.Fill.Visible = msoFalse
+obj.Line.Visible = msoFalse
+obj.TextFrame2.TextRange.Font.Fill.ForeColor.RGB = RGB(0, 74, 124)
+obj.TextFrame2.TextRange.Font.Bold = msoTrue
+obj.TextFrame2.TextRange.ParagraphFormat.Alignment = msoAlignLeft
+obj.TextFrame2.TextRange.Font.Size = 14
+
+End Sub
+
+
+Sub AbreVBA()
+   Application.Goto "Atualiza"
+End Sub
