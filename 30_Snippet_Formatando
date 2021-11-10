@@ -1,0 +1,88 @@
+Sub Formatar()
+
+    Dim rng As Range
+    
+    Sheets(2).Select
+    Sheets(2).Name = "Pronto"
+    
+    With ActiveWorkbook.Sheets("Pronto").Tab
+        .Color = 8145408
+        .TintAndShade = 0
+    End With
+    
+    ActiveWindow.DisplayGridlines = False
+    
+    Set rng = Range("A1")
+    
+' Define Limites
+    LinhaFIM = GetLastRow(rng)
+    ColunaFIM = GetLastColumn(rng)
+
+    Range(Cells(1, 1), Cells(1, ColunaFIM)).Select
+    Selection.Borders.LineStyle = xlNone
+
+'Formatação de Header
+    With Selection
+        .VerticalAlignment = xlCenter
+        .HorizontalAlignment = xlCenter
+        .WrapText = False
+        .Interior.Color = 8145408
+            With .Font
+                .ThemeColor = xlThemeColorDark1
+                .TintAndShade = 0
+                .Bold = True
+                .Size = 10
+                .Color = vbWhite
+            End With
+            With .Borders(xlInsideVertical)
+                .LineStyle = xlContinuous
+                .ThemeColor = 1
+                .TintAndShade = 0
+                .Weight = xlThin
+            End With
+    End With
+        
+' Adiciona Linha Coluna borda
+    Range("A1").Select
+    Selection.EntireColumn.Insert
+    Selection.EntireRow.Insert
+    
+    Columns("A:A").ColumnWidth = 1.14
+    Rows("1:1").RowHeight = 7.5
+    
+'Formatação dos contents
+    Range(Cells(3, 2), Cells(LinhaFIM + 1, ColunaFIM + 1)).Select
+    With Selection
+        .HorizontalAlignment = xlLeft
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Font.Size = 11
+    End With
+    
+    Selection.Columns.AutoFit
+    Selection.Font.Size = 10
+    
+    Rows("3:" & LinhaFIM + 1).Select
+    Selection.RowHeight = 19.5
+    Range("A1").Select
+
+' Move pra um novo arquivo e reseta o template
+    Sheets("Pronto").Move
+    Windows("30_Snippet_Formatando.xlsb").Activate
+    Sheets.Add After:=ActiveSheet
+    Sheets(2).Name = "Planilha 1"
+    Sheets(2).Range("A1").Interior.Color = vbYellow
+
+End Sub
+
+Sub AbreVBA()
+   Application.Goto "Formatar"
+End Sub
+
+Public Function GetLastRow(rng As Range)
+    GetLastRow = Cells(1048576, rng.Column).End(xlUp).Row
+End Function
+
+Public Function GetLastColumn(rng As Range)
+    GetLastColumn = Cells(rng.Row, 16384).End(xlToLeft).Column
+End Function
