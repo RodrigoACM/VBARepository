@@ -1,0 +1,29 @@
+Sub LoopThroughFiles()
+ 
+Dim oFSO As Object
+Dim oFolder As Object
+Dim oFile As Object
+Dim i As Integer
+ 
+Set oFSO = CreateObject("Scripting.FileSystemObject")
+AcFolder = ActiveWorkbook.Path
+ 
+Set oFolder = oFSO.GetFolder(AcFolder)
+ 
+Maior = 0
+ 
+For Each oFile In oFolder.Files
+    If Asc(Left(oFile.Name, 2)) > 47 And Asc(Left(oFile.Name, 2)) < 58 Then
+       If CInt(Mid(oFile.Name, 1, 2)) > Maior Then
+          Maior = CInt(Mid(oFile.Name, 1, 2))
+       End If
+    End If
+Next oFile
+    
+MsgBox Maior + 1, vbInformation, ActiveWorkbook.Name
+ 
+End Sub
+
+Sub AbreVBA()
+   Application.Goto "LoopThroughFiles"
+End Sub
