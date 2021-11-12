@@ -1,0 +1,143 @@
+
+Public Function GetHTML(URL As String) As String
+    On Error Resume Next
+    With CreateObject("MSXML2.serverXMLHTTP.6.0")
+        .Open "GET", URL, False
+        .Send
+        GetHTML = .ResponseText
+    End With
+        
+    If Err.Number <> 0 Then
+       Err.Clear
+       Exit Function
+     End If
+        
+End Function
+
+
+Public Sub BuscaSite(ByVal Site As String)
+
+    Dim textoURL               As Variant
+    Dim i                     As Long
+
+   strURL = GetHTML(Site)
+
+   If strURL = "Erro" Or Len(strURL) < 5 Then
+       Exit Sub
+    End If
+    
+    textoURL = ExtractSites(strURL)
+    If IsNull(textoURL) = False And UBound(textoURL) > -1 Then
+       NovoARR = RemoveDupesColl(textoURL)
+          For i = 0 To UBound(NovoARR)
+             TextoEncontrado = Trim(NovoARR(i))
+             If Len(TextoEncontrado) > 2 Then
+                    If InStr(1, TextoEncontrado, "instagram.com") > 1 Then
+                       strSAIDA = strSAIDA & vbCrLf & "Instagram: " & TextoEncontrado
+                    ElseIf InStr(1, TextoEncontrado, "facebook.com") > 1 Then
+                       strSAIDA = strSAIDA & vbCrLf & "Facebook: " & TextoEncontrado
+                    ElseIf InStr(1, TextoEncontrado, "whatsapp") > 1 Then
+                       strSAIDA = strSAIDA & vbCrLf & "Whatsapp: " & TextoEncontrado
+                    ElseIf InStr(1, TextoEncontrado, "linkedin.com") > 1 Then
+                       strSAIDA = strSAIDA & vbCrLf & "Linkedin: " & TextoEncontrado
+                    ElseIf InStr(1, TextoEncontrado, "twitter.com") > 1 Then
+                       strSAIDA = strSAIDA & vbCrLf & "Twitter: " & TextoEncontrado
+                    ElseIf InStr(1, TextoEncontrado, "youtube.com") > 1 And InStr(1, TextoEncontrado, "watch") < 1 And InStr(1, TextoEncontrado, "playlist") < 1 Then
+                       strSAIDA = strSAIDA & vbCrLf & "Youtube: " & TextoEncontrado
+                    Else
+                       ' Nada a Fazer
+                    End If
+              End If
+           Next i
+    End If
+    
+    MsgBox "Redes sociais encontradas na URL:" & vbCrLf & strSAIDA, vbInformation, Site
+
+
+End Sub
+
+                    
+Public Function RemoveDupesColl(poArr As Variant) As Variant
+    Dim poArrNoDup()
+
+    dupArrIndex = -1
+    For i = LBound(poArr) To UBound(poArr)
+        dupBool = False
+
+        For j = LBound(poArr) To i
+            If poArr(i) = poArr(j) And Not i = j Then
+                dupBool = True
+            End If
+        Next j
+
+        If dupBool = False Then
+            dupArrIndex = dupArrIndex + 1
+            ReDim Preserve poArrNoDup(dupArrIndex)
+            poArrNoDup(dupArrIndex) = poArr(i)
+        End If
+    Next i
+
+    RemoveDupesColl = poArrNoDup
+End Function
+
+
+
+Public Function ExtractSites(ByVal sInput As Variant) As Variant
+    On Error GoTo Error_Handler
+    Dim oRegEx                As Object
+    Dim oMatches              As Object
+    Dim oMatch                As Object
+    Dim sSite                As String
+ 
+    If Not IsNull(sInput) Then
+        Set oRegEx = CreateObject("vbscript.regexp")
+        With oRegEx
+            .Pattern = "https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
+            .Global = True
+            .IgnoreCase = True
+            .MultiLine = True
+            Set oMatches = .Execute(sInput)
+        End With
+        For Each oMatch In oMatches
+            sSite = oMatch.Value & "," & sSite
+        Next oMatch
+        If Right(sSite, 1) = "," Then sSite = Left(sSite, Len(sSite) - 1)
+ 
+        ExtractSites = Split(sSite, ",")    'Return an array of email addresses extracted from sInput
+    Else
+        ExtractSites = Null
+    End If
+ 
+Error_Handler_Exit:
+    On Error Resume Next
+    If Not oMatch Is Nothing Then Set oMatch = Nothing
+    If Not oMatches Is Nothing Then Set oMatches = Nothing
+    If Not oRegEx Is Nothing Then Set oRegEx = Nothing
+    Exit Function
+ 
+Error_Handler:
+    MsgBox "The following error has occured" & vbCrLf & vbCrLf & _
+           "Error Number: " & Err.Number & vbCrLf & _
+           "Error Source: ExtractEmailAddresses" & vbCrLf & _
+           "Error Description: " & Err.Description & _
+           Switch(Erl = 0, "", Erl <> 0, vbCrLf & "Line No: " & Erl) _
+           , vbOKOnly + vbCritical, "An Error has Occured!"
+    Resume Error_Handler_Exit
+    
+End Function
+
+
+
+Sub RunSite()
+
+    For i = 9 To 12
+        strURL = Range("B" & i).Value
+        Call BuscaSite(strURL)
+    Next
+
+End Sub
+
+Sub AbreVBA()
+   Application.Goto "BuscaSite"
+End Sub
+
