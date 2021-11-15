@@ -1,0 +1,39 @@
+Sub Formatar()
+
+    Dim rng As Range
+    
+   
+    Set rng = Range("B9")
+    
+' Define Limites
+    LinhaFIM = GetLastRow(rng)
+    ColunaFIM = 6
+    
+    linDEST = 9
+
+    'varre o quadrado do range C10 até a última linha e coluna
+    For x = 10 To LinhaFIM
+        For y = 3 To ColunaFIM
+            linDEST = linDEST + 1
+            Cells(linDEST, 8).Value = Cells(x, 2).Value 'item
+            Cells(linDEST, 9).Value = Cells(9, y).Value  'categoria
+            Cells(linDEST, 10).Value = Cells(x, y).Value 'valor
+        Next
+    Next
+
+
+End Sub
+
+Sub AbreVBA()
+   Application.Goto "Formatar"
+End Sub
+
+Public Function GetLastRow(rng As Range)
+    GetLastRow = Cells(1048576, rng.Column).End(xlUp).Row
+End Function
+
+Public Function GetLastColumn(rng As Range)
+    GetLastColumn = Cells(rng.Row, 16384).End(xlToLeft).Column
+End Function
+
+    
