@@ -1,0 +1,30 @@
+Sub JsonToExcelExample()
+Dim jsonText As String
+Dim jsonObject As Object, item As Object
+Dim i As Long
+Dim ws As Worksheet
+
+Set ws = Worksheets("Dados")
+
+jsonText = ws.Cells(9, 2)
+
+Set jsonObject = JsonConverter.ParseJson(jsonText)
+
+i = 12
+
+ws.Cells(11, 2) = "Color"
+ws.Cells(11, 3) = "Hex Code"
+
+For Each item In jsonObject
+    ws.Cells(i, 2) = item("color")
+    ws.Cells(i, 3) = item("value")
+    i = i + 1
+Next
+
+End Sub
+
+Sub AbreVBA()
+   Application.GoTo "JsonToExcelExample"
+End Sub
+
+'depois disso é necessário baixar o JsonConverter.bas que é um módulo pronto disponível aqui no repositório também - tem 1200 linhas de código
