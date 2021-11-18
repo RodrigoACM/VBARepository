@@ -1,0 +1,146 @@
+Public Function HorasUteis(DataINI As Date, DataFIM As Date, Feriados As Range, IniExpediente As Double, FimExpediente As Double)
+  
+  
+'************* AJUSTES DE DATA ************
+  DataPartINI = CDate(Format(DataINI, "dd/mm/yyyy"))
+  HoraInicio = CDate(Format(DataINI, "hh:mm:ss"))
+  
+  DataPartFIM = CDate(Format(DataFIM, "dd/mm/yyyy"))
+  HoraFIM = CDate(Format(DataFIM, "hh:mm:ss"))
+  
+  'Ajuste Hora Inicio
+  If HoraInicio < IniExpediente Then
+        HoraInicio = IniExpediente
+     ElseIf HoraIncio > FimExpediente Then
+        HoraInicio = IniExpediente
+        DataPartINI = DataPartINI + 1
+     Else 'Hora OK
+  End If
+  
+  'Ajuste Hora FIM
+  If HoraFIM < IniExpediente Then
+        HoraFIM = IniExpediente
+     ElseIf HoraFIM > FimExpediente Then
+        HoraFIM = IniExpediente
+        DataPartFIM = DataPartFIM + 1
+     Else 'Hora OK
+  End If
+  
+  'Correção de bug no envio da Function
+  oDataPartINI = DataPartINI
+  oDataPartFIM = DataPartFIM
+  
+     
+  nDataPartINI = CheckNDiaUtil(DataPartINI, Feriados)
+  nDataPartFIM = CheckNDiaUtil(DataPartFIM, Feriados)
+  
+  If nDataPartINI > oDataPartINI Then HoraInicio = IniExpediente
+  If nDataPartFIM > oDataPartFIM Then HoraFIM = IniExpediente
+  
+  HoraInicio = CDate(HoraInicio)
+  HoraFIM = CDate(HoraFIM)
+
+  AcumHoras = 0
+  jornada = FimExpediente - IniExpediente
+  
+  If nDataPartINI - nDataPartFIM = 0 Then 'MESMO DIA
+     HorasUteis = HoraFIM - HoraInicio
+     Else
+     PartePriDia = FimExpediente - CDate(HoraInicio)
+     For m = nDataPartINI + 1 To nDataPartFIM
+         chk = CheckIFDiaUtil(m, Feriados)
+         If chk = True Then
+            If m <> nDataPartFIM Then
+               AcumHoras = AcumHoras + jornada
+               Else
+               AcumHoras = AcumHoras + (HoraFIM - IniExpediente)
+             End If
+         End If
+     Next
+     HorasUteis = PartePriDia + AcumHoras
+  End If
+  
+End Function
+
+Sub AbreVBA()
+   Application.Goto "HorasUteis"
+End Sub
+
+
+Public Function CheckNDiaUtil(DataVar, Feriados)
+
+  x = 0
+  
+  While x <> 1
+      If Application.Weekday(DataVar) = 7 Or Application.Weekday(DataVar) = 1 Then
+         DataVar = DataVar + 1
+         Else
+         y = 0
+         For Each Cell In Feriados.Cells
+            If DataVar = Cell.Value Then
+               DataVar = DataVar + 1
+               y = 1
+            End If
+         Next
+         If y = 0 Then
+            x = 1
+         End If
+      End If
+  Wend
+  
+  CheckNDiaUtil = DataVar
+
+End Function
+
+Public Function CheckIFDiaUtil(DataVar, Feriados)
+
+  x = 1
+
+  DataVar = CDate(Format(DataVar, "dd/mm/yyyy"))
+
+  If Application.Weekday(DataVar) = 7 Or Application.Weekday(DataVar) = 1 Then
+     x = 0
+         Else
+         For Each Cell In Feriados.Cells
+            If DataVar = Cell.Value Then
+               x = 0
+            End If
+         Next
+  End If
+  
+  If x = 1 Then
+     CheckIFDiaUtil = True
+     Else
+     CheckIFDiaUtil = False
+  End If
+  
+End Function
+
+Public Function Data_Ajustada(DataINI As Date, Feriados As Range, IniExpediente As Double, FimExpediente As Double)
+  
+  
+'************* AJUSTES DE DATA ************
+  DataPartINI = CDate(Format(DataINI, "dd/mm/yyyy"))
+  HoraInicio = CDate(Format(DataINI, "hh:mm:ss"))
+  
+  'Ajuste Hora Inicio
+  If HoraInicio < IniExpediente Then
+        HoraInicio = IniExpediente
+     ElseIf HoraIncio > FimExpediente Then
+        HoraInicio = IniExpediente
+        DataPartINI = DataPartINI + 1
+     Else 'Hora OK
+  End If
+  
+  'Correção de bug no envio da Function
+  oDataPartINI = DataPartINI
+     
+  nDataPartINI = CheckNDiaUtil(DataPartINI, Feriados)
+  
+  If nDataPartINI > oDataPartINI Then HoraInicio = IniExpediente
+  
+  HoraInicio = CDate(HoraInicio)
+
+  Data_Ajustada = CDate(nDataPartINI) + CDate(HoraInicio)
+  
+End Function
