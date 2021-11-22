@@ -1,0 +1,29 @@
+Private Function WhereInArray(arr1 As Variant, vFind As Variant) As Variant
+'DEVELOPER: Ryan Wells (wellsr.com)
+    Dim i As Long
+For i = LBound(arr1) To UBound(arr1)
+    If arr1(i) = vFind Then
+        WhereInArray = i
+        Exit Function
+    End If
+Next i
+WhereInArray = Null
+End Function
+
+
+Sub AchaNoArray()
+
+   'Cria um array para testar na Função
+   
+   Nomes = "Rodrigo;Bruno;Renato;Carlos;Thiago;Marcos;Victor"
+   NovoARR = Split(Nomes, ";")
+   
+   MsgBox "Posição: " & WhereInArray(NovoARR, "Carlos"), vbInformation, "Array"
+
+End Sub
+
+
+Sub AbreVBA()
+   Application.Goto "AchaNoArray"
+End Sub
+
