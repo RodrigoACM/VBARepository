@@ -1,0 +1,37 @@
+Option Explicit
+Public WithEvents oApp As Application
+Private bDeferredOpen As Boolean
+Private Sub Workbook_Open()
+    Set oApp = Application
+End Sub
+Private Sub oApp_WorkbookActivate(ByVal Wb As Workbook)
+    If bDeferredOpen Then
+        bDeferredOpen = False
+        Call WorkbookOpenHandler(Wb)
+    End If
+End Sub
+Private Sub oApp_WorkbookOpen(ByVal Wb As Workbook)
+    Dim oProtectedViewWindow As ProtectedViewWindow
+    On Error Resume Next
+    'The below line will throw an error (Subscript out of range) if the workbook is not opened in protected view.
+    Set oProtectedViewWindow = oApp.ProtectedViewWindows.Item(Wb.Name)
+    On Error GoTo 0
+    'Reset error handling
+    If oProtectedViewWindow Is Nothing Then
+        bDeferredOpen = False
+        Call WorkbookOpenHandler(Wb)
+    Else
+        'Delay open actions till the workbook gets activated.
+        bDeferredOpen = True
+    End If
+End Sub
+Private Sub WorkbookOpenHandler(ByVal Wb As Workbook)
+    'The actual workbook open event handler code goes here...
+    
+    Msgbox "Agora
+   
+End Sub
+
+Sub AbreVBA()
+   Application.Goto "Workbook_Open"
+End Sub
