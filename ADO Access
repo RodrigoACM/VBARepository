@@ -1,0 +1,31 @@
+Public Function FillArrayADO(strSQL)
+    Dim rst As ADODB.Recordset
+    Dim cnn As ADODB.Connection
+    Dim strConnection As String
+    Dim strSQL As String
+    Dim arrRows As Variant
+    Dim intRow As Integer
+
+    strConnection = CurrentProject.Connection
+
+    Set cnn = New ADODB.Connection
+
+    Set rst = New ADODB.Recordset
+    strSQL = "SELECT * FROM aux_Mes"
+    rst.Open strSQL, CurrentProject.Connection, adOpenStatic, adLockReadOnly, adCmdText
+
+    ' Load array
+    arrRows = rst.GetRows()
+
+    ' Print array elements
+    For intRow = 0 To UBound(arrRows, 2)
+        Debug.Print " " & _
+            arrRows(0, intRow) & " " & _
+            arrRows(1, intRow)
+    Next intRow
+
+    rst.Close
+    
+    
+
+End Function
