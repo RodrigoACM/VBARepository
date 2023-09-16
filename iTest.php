@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800" rel="stylesheet">
-    <link href="css/plugin.css" rel="stylesheet" />
-    <link href="css/style.css" rel="stylesheet" />
+    <link href="https://github.com/RodrigoACM/VBARepository/blob/master/plugin.css" rel="stylesheet" />
+    <link href="https://github.com/RodrigoACM/VBARepository/blob/master/style.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/switcher/skin-red.css" media="screen" id="style-colors" />
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -71,7 +71,10 @@
     </script>
 
     <!-- seus outros scripts -->
-    <script src="js/plugin.js"></script>
-    <script src="js/main.js"></script>
+    <script src="https://github.com/RodrigoACM/VBARepository/blob/master/plugin.js"></script>
+    <script src="https://github.com/RodrigoACM/VBARepository/blob/master/main.js"></script>
+	
+	
+	
 </body>
 </html>
